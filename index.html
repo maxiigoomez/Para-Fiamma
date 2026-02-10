@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso Restringido - Terminal</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #terminal {
+            width: 85%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 30px;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 20px #00ff41;
+            border-radius: 5px;
+        }
+        .line { margin-bottom: 12px; font-size: 1.1em; }
+        input {
+            background: transparent;
+            border: none;
+            color: #00ff41;
+            font-family: inherit;
+            font-size: 1.2em;
+            outline: none;
+            width: 100%;
+            border-bottom: 1px solid #00ff41;
+        }
+        .hidden { display: none; }
+        .final-msg {
+            text-align: center;
+            animation: fadeIn 2s ease-in;
+        }
+        h1 { color: #ff4b2b; text-shadow: 0 0 10px #ff4b2b; }
+        #btn-si {
+            background: #ff4b2b;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5em;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 50px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+        #btn-si:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ff4b2b;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+    <div id="log"></div>
+    <div id="input-line" class="hidden">
+        <p>> ¿CUAL FUE NUESTRA PRIMERA CHARLA?</p>
+        <input type="text" id="answer" autocomplete="off">
+    </div>
+</div>
+
+<script>
+    const log = document.getElementById('log');
+    const inputLine = document.getElementById('input-line');
+    const answerInput = document.getElementById('answer');
+
+    const lines = [
+        "[SISTEMA]: Iniciando protocolo de búsqueda...",
+        "[SISTEMA]: Bypass de firewall exitoso.",
+        "[SISTEMA]: Escaneando base de datos 'Fiamma'...",
+        "[SISTEMA]: Persona favorita detectada.",
+        "[SISTEMA]: Ejecutando script de sentimientos...",
+        "[ADVERTENCIA]: El acceso requiere una frase clave."
+    ];
+
+    let i = 0;
+    function typeLine() {
+        if (i < lines.length) {
+            const p = document.createElement('p');
+            p.className = 'line';
+            p.textContent = lines[i];
+            log.appendChild(p);
+            i++;
+            setTimeout(typeLine, 800);
+        } else {
+            inputLine.classList.remove('hidden');
+            answerInput.focus();
+        }
+    }
+
+    answerInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            const val = answerInput.value.toLowerCase().trim();
+            if (val === 'hacemos juntos?') {
+                showSuccess();
+            } else {
+                alert("Prueba nuevamente, no me decepciones. :(");
+                answerInput.value = "";
+            }
+        }
+    });
+
+    function showSuccess() {
+        const terminal = document.getElementById('terminal');
+        terminal.innerHTML = `
+            <div class="final-msg">
+                <h1>[ ACCESO CONCEDIDO ]</h1>
+                <p style="color: white; font-size: 1.2em;">Fiamma, has hackeado mi sistema por completo...</p>
+                <p style="color: #00ff41;">¿QUIERES SER MI NOVIA Y HACER JUNTOS UNA VIDA?</p>
+                <button id="btn-si">¡SÍ!</button>
+            </div>
+        `;
+        
+        document.getElementById('btn-si').addEventListener('click', function() {
+            // Explosión de confeti
+            var duration = 5 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+              confetti({
+                particleCount: 7,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ff4b2b', '#00ff41', '#ffffff']
+              });
+              confetti({
+                particleCount: 7,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ff4b2b', '#00ff41', '#ffffff']
+              });
+
+              if (Date.now() < end) {
+                requestAnimationFrame(frame);
+              }
+            }());
+            
+            this.textContent = "LOVE YOU ❤️";
+            this.disabled = true;
+        });
+    }
+
+    window.onload = typeLine;
+</script>
+
+</body>
+</html>
